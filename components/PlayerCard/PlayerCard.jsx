@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import ManLogo from "../../src/assets/user-1.png";
 import Flag from "../../src/assets/report-1.png";
 
-const PlayerCard = ({ player, availableBalence, SetAvailableBalence }) => {
+const PlayerCard = ({
+  player,
+  availableBalence,
+  SetAvailableBalence,
+  purchasedPlayers,
+  setPurchasedPlayers,
+  toast,
+}) => {
   const [isSelected, setIsSelected] = useState(false);
 
   const handleAvailableBalence = (playerData) => {
@@ -11,14 +18,15 @@ const PlayerCard = ({ player, availableBalence, SetAvailableBalence }) => {
     );
 
     if (availableBalence >= cleanPrice) {
-      alert(
+      toast(
         `Congratulations! You selected ${playerData.player_name} and We cut ${playerData.price} from your account. To Check your balace see on the top `
       );
 
       SetAvailableBalence(availableBalence - cleanPrice);
       setIsSelected(true);
+      setPurchasedPlayers([...purchasedPlayers, playerData]);
     } else {
-      alert("Sorry, You do not have enough money.");
+      toast("Sorry, You do not have enough money.");
     }
   };
 

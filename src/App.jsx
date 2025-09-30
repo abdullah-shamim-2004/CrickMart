@@ -3,6 +3,7 @@ import AvailablePlayers from "../components/AvailablePlayers/AvailablePlayers";
 import Navbar from "../components/Navbar/Navbar";
 import "./App.css";
 import SelectedPlayers from "../components/SelectedPlayers/SelectedPlayers";
+import { ToastContainer, toast } from "react-toastify";
 
 const fetchPlayers = async () => {
   const res = await fetch("/Players.json");
@@ -12,13 +13,18 @@ const PlayersPromise = fetchPlayers();
 
 function App() {
   const [toggle, setToggle] = useState(true);
-  const [availableBalence, SetAvailableBalence]=useState(1000000)
+  const [availableBalence, SetAvailableBalence] = useState(1200000);
+  const [purchasedPlayers, setPurchasedPlayers] = useState([]);
 
   return (
     <>
       <Navbar availableBalence={availableBalence}></Navbar>
-      <div className="flex justify-between items-center max-w-[1200px] m-auto">
-        <div className="font-bold">Available Players</div>
+      <div className="flex justify-between items-center max-w-[1200px] m-auto my-4">
+        <div className="font-bold">
+          {toggle
+            ? "Available Players"
+            : `Selected Players (${purchasedPlayers.length}/6)`}
+        </div>
         <div className="font-semibold">
           <button
             onClick={() => setToggle(true)}
@@ -34,7 +40,7 @@ function App() {
               toggle === false ? "bg-amber-300" : " "
             }`}
           >
-            Selected
+            {` Selected (${purchasedPlayers.length}/6)`}
           </button>
         </div>
       </div>
@@ -44,10 +50,18 @@ function App() {
             <span className="loading loading-spinner loading-md"></span>
           }
         >
-          <AvailablePlayers availableBalence={availableBalence} SetAvailableBalence={SetAvailableBalence} PlayersPromise={PlayersPromise}></AvailablePlayers>
+          <ToastContainer />
+          <AvailablePlayers
+            toast={toast}
+            setPurchasedPlayers={setPurchasedPlayers}
+            purchasedPlayers={purchasedPlayers}
+            availableBalence={availableBalence}
+            SetAvailableBalence={SetAvailableBalence}
+            PlayersPromise={PlayersPromise}
+          ></AvailablePlayers>
         </Suspense>
       ) : (
-        <SelectedPlayers></SelectedPlayers>
+        <SelectedPlayers purchasedPlayers={purchasedPlayers}></SelectedPlayers>
       )}
     </>
   );
