@@ -4,6 +4,8 @@ import Navbar from "../components/Navbar/Navbar";
 import "./App.css";
 import SelectedPlayers from "../components/SelectedPlayers/SelectedPlayers";
 import { ToastContainer, toast } from "react-toastify";
+import HeroSection from "../components/Hero/HeroSection";
+import Footer from "../components/Footer/Footer";
 
 const fetchPlayers = async () => {
   const res = await fetch("/Players.json");
@@ -16,9 +18,16 @@ function App() {
   const [availableBalence, SetAvailableBalence] = useState(1200000);
   const [purchasedPlayers, setPurchasedPlayers] = useState([]);
 
+  const onRemove = (id) => {
+    setPurchasedPlayers(purchasedPlayers.filter((p) => p.id !== id));
+    // console.log(purchasedPlayers);
+  };
+
   return (
     <>
       <Navbar availableBalence={availableBalence}></Navbar>
+
+      <HeroSection></HeroSection>
       <div className="flex justify-between items-center max-w-[1200px] m-auto my-4">
         <div className="font-bold">
           {toggle
@@ -61,8 +70,12 @@ function App() {
           ></AvailablePlayers>
         </Suspense>
       ) : (
-        <SelectedPlayers purchasedPlayers={purchasedPlayers}></SelectedPlayers>
+        <SelectedPlayers
+          onRemove={onRemove}
+          purchasedPlayers={purchasedPlayers}
+        ></SelectedPlayers>
       )}
+      <Footer></Footer>
     </>
   );
 }
